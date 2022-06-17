@@ -25,7 +25,7 @@ class Player:
             self.rect.y += self.speed
 
         # So that it doesn't go off screen by bottom
-        self.rect.bottom = max(self.rect.bottom, HEIGHT)
+        self.rect.y = min(self.rect.midbottom[1], HEIGHT) - self.rect.h
 
     def draw(self, screen):
         screen.blit(self.image, self.rect.topleft)

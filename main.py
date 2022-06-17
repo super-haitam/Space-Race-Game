@@ -36,6 +36,8 @@ class Game:
         running = True
         is_started = True
         while running:
+            self.clock.tick(60)
+
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
@@ -48,6 +50,9 @@ class Game:
             if not is_started:
                 self.draw_welcome()
                 continue
+
+            self.player.handle_movement("up", "down")
+            self.opponent.handle_movement('w', 's')
 
             self.draw()
 
