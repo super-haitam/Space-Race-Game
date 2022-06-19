@@ -37,8 +37,8 @@ class SpaceShip:
 
 
 class Player(SpaceShip):
-    def __init__(self, x, color_name):
-        super().__init__(x, color_name, RED, "Player1")
+    def __init__(self, x, color_name: str, color, name):
+        super().__init__(x, color_name, color, name)
 
     def handle_movement(self, up_key: str, down_key: str):
         dictionary = {"up": pygame.K_UP, "down": pygame.K_DOWN, 
@@ -58,8 +58,8 @@ class Player(SpaceShip):
 
 
 class AI_Opponent(SpaceShip):
-    def __init__(self, x, color_name):
-        super().__init__(x, color_name, BLUE, "Player2")
+    def __init__(self, x, color_name: str, color, name):
+        super().__init__(x, color_name, color, name)
 
     def move(self, bullets: list):
         self.rect.y -= self.speed

@@ -14,10 +14,10 @@ pygame.display.set_caption("Space Run Game")
 
 # Movement Keys
 width = WIDTH/5
-player_keys_img = get_pygame_img(CreateImage(BLACK, {"Move Player1": ["up", "down"]}, color=WHITE))
+player_keys_img = get_pygame_img(CreateImage(BLACK, {"Move Player1": ['w', 's']}, color=WHITE))
 player_keys_img = pygame.transform.scale(player_keys_img,
     (width, (width) / (player_keys_img.get_width()/player_keys_img.get_height())))
-opponent_keys_img = get_pygame_img(CreateImage(BLACK, {"Move Player2": ['w', 's']}, color=WHITE))
+opponent_keys_img = get_pygame_img(CreateImage(BLACK, {"Move Player2": ["up", "down"]}, color=WHITE))
 opponent_keys_img = pygame.transform.scale(opponent_keys_img,
     (width, (width) / (opponent_keys_img.get_width()/opponent_keys_img.get_height())))
 
@@ -38,7 +38,7 @@ class Game:
     def __init__(self):
         self.clock = pygame.time.Clock()
 
-        self.player = Player(WIDTH*(1/5), "Red")
+        self.player = Player(WIDTH*(1/5), "Red", RED, "Player1")
         self.game_time = 60
 
         self.bullets = [Bullet() for _ in range(18)]
@@ -141,13 +141,13 @@ class Game:
                         player_bool, robot_bool = True, False
                         is_choosing = False
 
-                        self.opponent = Player(WIDTH*(4/5), "Blue")
+                        self.opponent = Player(WIDTH*(4/5), "Blue", BLUE, "Player2")
                         self.timer_bar = TimerBar(self.game_time)
                     elif robot_rect.collidepoint(mouse_x, mouse_y):
                         player_bool, robot_bool = False, True
                         is_choosing = False
 
-                        self.opponent = AI_Opponent(WIDTH*(4/5), "Blue")
+                        self.opponent = AI_Opponent(WIDTH*(4/5), "Blue", BLUE, "Player2")
                         self.timer_bar = TimerBar(self.game_time)
 
             if not is_started:
@@ -159,9 +159,9 @@ class Game:
                 continue
 
             # Handle Movements
-            self.player.handle_movement("up", "down")
+            self.player.handle_movement('w', 's')
             if player_bool:
-                self.opponent.handle_movement('w', 's')
+                self.opponent.handle_movement("up", "down")
             elif robot_bool:
                 self.opponent.move(self.bullets)
 
@@ -182,7 +182,7 @@ class Game:
             if self.timer_bar.rect.h <= 0:
                 self.draw_winner()
                 self.__init__()
-                self.opponent.__init__(self.opponent.rect.x, "Blue")
+                self.opponent.__init__(self.opponent.rect.x, "Blue", BLUE, "Player2")
                 is_started = False
 
                 time.sleep(2)
@@ -192,3 +192,5 @@ class Game:
 
 game = Game()
 game.run()
+
+# Pretty Easy
