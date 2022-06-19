@@ -2,6 +2,9 @@ from classes import Player, AI_Opponent, Bullet, TimerBar
 from settings import *
 import pygame
 import time
+import sys
+sys.path.append("game_touches_help")
+from get_game_touches_help_img import CreateImage, get_pygame_img
 pygame.init()
 
 
@@ -9,6 +12,14 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Run Game")
 
+# Movement Keys
+width = WIDTH/5
+player_keys_img = get_pygame_img(CreateImage(BLACK, {"Move Player1": ["up", "down"]}, color=WHITE))
+player_keys_img = pygame.transform.scale(player_keys_img,
+    (width, (width) / (player_keys_img.get_width()/player_keys_img.get_height())))
+opponent_keys_img = get_pygame_img(CreateImage(BLACK, {"Move Player2": ['w', 's']}, color=WHITE))
+opponent_keys_img = pygame.transform.scale(opponent_keys_img,
+    (width, (width) / (opponent_keys_img.get_width()/opponent_keys_img.get_height())))
 
 # Images
 choice_w = WIDTH/5
@@ -28,9 +39,9 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.player = Player(WIDTH*(1/5), "Red")
-        self.game_time = 1
+        self.game_time = 60
 
-        self.bullets = [Bullet() for _ in range(20)]
+        self.bullets = [Bullet() for _ in range(18)]
 
     def draw_choice(self):
         screen.fill(BLACK)
@@ -45,6 +56,12 @@ class Game:
         screen.blit(robot_img, robot_rect.topleft)
         pygame.draw.rect(screen, WHITE, player_rect, width=1)
         pygame.draw.rect(screen, WHITE, robot_rect, width=1)
+
+        # Draw movement Keys
+        offset = WIDTH/26
+        screen.blit(player_keys_img, (offset, HEIGHT/2.2))
+        screen.blit(opponent_keys_img, 
+                (WIDTH-offset-opponent_keys_img.get_width(), HEIGHT/2.2))
 
         pygame.display.flip()
 
@@ -100,7 +117,7 @@ class Game:
 
         pygame.display.flip()
 
-    def run(self): 
+    def run(self):
         # Main Loop
         running = True
         is_started = False
@@ -145,8 +162,8 @@ class Game:
             self.player.handle_movement("up", "down")
             if player_bool:
                 self.opponent.handle_movement('w', 's')
-            elif robot_rect:
-                self.opponent.move()
+            elif robot_bool:
+                self.opponent.move(self.bullets)
 
             for bullet in self.bullets:
                 bullet.move()
@@ -157,6 +174,7 @@ class Game:
                     offset = (bullet.rect.x - player.rect.x, bullet.rect.y - player.rect.y)
                     if player.mask.overlap(bullet.mask, offset):
                         player.reset_pos()
+                        bullet.spawn()
 
             self.timer_bar.run()
 
@@ -166,6 +184,8 @@ class Game:
                 self.__init__()
                 self.opponent.__init__(self.opponent.rect.x, "Blue")
                 is_started = False
+
+                time.sleep(2)
 
             self.draw()
 

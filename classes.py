@@ -61,7 +61,7 @@ class AI_Opponent(SpaceShip):
     def __init__(self, x, color_name):
         super().__init__(x, color_name, BLUE, "Player2")
 
-    def move(self):
+    def move(self, bullets: list):
         self.rect.y -= self.speed
 
         self.handle_crossing_line()
@@ -110,7 +110,7 @@ class TimerBar:
         self.duration = duration
         self.start_time = time.time()
 
-        self.rect = pygame.Rect([0, 0, WIDTH/40, HEIGHT])
+        self.rect = pygame.Rect([0, 0, WIDTH/46, HEIGHT])
         self.rect.x = WIDTH/2 - self.rect.w/2
 
     def run(self):
